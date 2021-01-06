@@ -13,6 +13,7 @@ public class Grafo<T> implements IGrafo<T> {
 	private int size;
 	private T[] vertices;
 	
+	@SuppressWarnings("unchecked")
 	public Grafo() {
 		matriz = new int[1][1];
 		vertices = (T[]) new Object[1];
@@ -36,14 +37,16 @@ public class Grafo<T> implements IGrafo<T> {
 
 	@Override
 	public void borrarArista(T u, T v) {
-		// TODO Auto-generated method stub
-		
+		int[] indices = getIndices(u, v);
+		matriz[indices[0]][indices[1]] = 0;
+		matriz[indices[1]][indices[0]] = 0;
 	}
 
 	@Override
 	public void borrarVertice(T v) {
-		// TODO Auto-generated method stub
-		
+		int[] indices = getIndices(v, v);
+		eliminarVertice(indices[0]);
+		size--;
 	}
 
 	@Override
@@ -93,6 +96,33 @@ public class Grafo<T> implements IGrafo<T> {
 		T[] nuevoVector = (T[])new Object[size*2];
 		for(int i=0; i < size; i++) {
 			nuevoVector[i] = vertices[i];
+		}
+		vertices = nuevoVector;
+	}
+	
+	private void eliminarVertice(int v) {
+		int[][] nuevaMatriz = new int[matriz.length - 1][matriz.length - 1];
+		int ajuste = 0;
+		for(int i=0; i < size; i++) {
+			if (i != v) {
+				for(int j=0; j < size; j++) {
+					if (j != v) {
+						int indiceJ = j-ajuste < 0 ? 0 : j-ajuste;
+						nuevaMatriz[i-ajuste][indiceJ] = matriz[i][j];
+					}
+				}
+			}else {
+				ajuste++;
+			}
+		}
+		matriz = nuevaMatriz;
+		
+		T[] nuevoVector = (T[])new Object[size-1];
+		ajuste = 0;
+		for(int i=0; i < size; i++) {
+			if (i != v) {
+				nuevoVector[i-ajuste] = vertices[i];
+			}
 		}
 		vertices = nuevoVector;
 	}

@@ -22,6 +22,8 @@ public class Test {
 		grafo.addVertice("b");
 		grafo.addVertice("c");
 		grafo.addArista("b", "c", 5);
+		grafo.borrarArista("b", "c");
+		grafo.borrarVertice("b");
 	}
 
 }
